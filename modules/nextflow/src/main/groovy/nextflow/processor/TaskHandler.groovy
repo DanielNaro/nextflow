@@ -220,6 +220,13 @@ abstract class TaskHandler {
         record.env = task.getEnvironmentStr()
         record.executorName = task.processor.executor.getName()
 
+        record.inputs = task.getInputsStr()
+        record.inputEnvironment = task.getInputEnvironmentStr()
+        record.inputFiles = task.getInputFilesStr()
+        record.inputFilesMap = task.getInputFilesMapStr()
+        //record.outputs = task.getOutputFilesNamesStr()
+        record.outputs = task.getOutputsStr()
+
         if( isCompleted() ) {
             record.error_action = task.errorAction?.toString()
 

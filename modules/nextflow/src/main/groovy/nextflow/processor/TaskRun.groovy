@@ -979,5 +979,75 @@ class TaskRun implements Cloneable {
     CondaConfig getCondaConfig() {
         return processor.session.getCondaConfig()
     }
+
+    String getInputsStr() {
+        StringBuilder builder = new StringBuilder('InputsMap ');
+        for (var input: inputs){
+            builder.append(input.key.name)
+            builder.append(": ")
+            builder.append(input.value.toString())
+            builder.append(" ")
+        }
+        builder.append(";")
+        return builder.toString();
+    }
+
+    String getInputEnvironmentStr() {
+        StringBuilder builder = new StringBuilder('InputEnvironment ');
+        for (var input: inputEnvironment){
+            builder.append(input.key)
+            builder.append(": ")
+            builder.append(input.value)
+            builder.append(" ")
+        }
+        builder.append(";")
+        return builder.toString();
+    }
+
+    String getInputFilesStr() {
+        StringBuilder builder = new StringBuilder('InputFiles ');
+        for (var input: inputFiles){
+            builder.append(input.key.toString())
+            builder.append(": ")
+            builder.append(input.value.toString())
+            builder.append(" ")
+        }
+        builder.append(";")
+        return builder.toString();
+    }
+
+    String getInputFilesMapStr() {
+        StringBuilder builder = new StringBuilder('InputFilesMap ');
+        for (var input: getInputFilesMap()){
+            builder.append(input.key)
+            builder.append(": ")
+            builder.append(input.value.toString())
+            builder.append(" ")
+        }
+        builder.append(";")
+        return builder.toString();
+    }
+
+    String getOutputFilesNamesStr() {
+        StringBuilder builder = new StringBuilder('OutputFilesMap ');
+        for (var output: getOutputFilesNames()){
+            builder.append(output.toString())
+            builder.append(" ")
+        }
+        builder.append(";")
+        return builder.toString();
+    }
+
+    String getOutputsStr() {
+        StringBuilder builder = new StringBuilder('OutputsMap ');
+        for (var input: outputs){
+            builder.append(input.key.toString())
+            builder.append(": ")
+            builder.append(input.value.toString())
+            builder.append(" ")
+        }
+        builder.append(";")
+        return builder.toString();
+    }
 }
 
