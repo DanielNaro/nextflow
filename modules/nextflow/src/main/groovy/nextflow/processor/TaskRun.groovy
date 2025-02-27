@@ -16,7 +16,9 @@
 
 package nextflow.processor
 
+import groovyx.gpars.dataflow.DataflowWriteChannel
 import nextflow.conda.CondaConfig
+import sun.nio.fs.UnixPath
 
 import java.nio.file.FileSystems
 import java.nio.file.NoSuchFileException
@@ -980,6 +982,22 @@ class TaskRun implements Cloneable {
         return processor.session.getCondaConfig()
     }
 
+    Map<String, List<Map<String, String>>> getInputsMap() {
+        Map<String, List<Map<String, String>>> result = new LinkedHashMap<>();
+        for (var input: inputs){
+            List<Map<String, String>> child_list = new ArrayList<>();
+            List<FileHolder> fileHolders = input.value.properties["target"];
+            for(var fileHolder: fileHolders){
+                Map<String, String> child_map = new LinkedHashMap<>();
+                child_map.put("storePath", fileHolder.getStorePath().toString())
+                child_map.put("stageName", fileHolder.getStageName())
+                child_list.add(child_map);
+            }
+            result.put(input.getKey().toString(), child_list);
+        }
+        return result;
+    }
+
     String getInputsStr() {
         StringBuilder builder = new StringBuilder('InputsMap ');
         for (var input: inputs){
@@ -1038,16 +1056,20 @@ class TaskRun implements Cloneable {
         return builder.toString();
     }
 
-    String getOutputsStr() {
-        StringBuilder builder = new StringBuilder('OutputsMap ');
-        for (var input: outputs){
-            builder.append(input.key.toString())
-            builder.append(": ")
-            builder.append(input.value.toString())
-            builder.append(" ")
+    Map<String, String> getOutputsMap() {
+        Map<String, String> result = new LinkedHashMap<>();
+        for (var output: outputs){
+            System.out.println("output: "+output);
+            if (output.value == null || output.key.getChannelEmitName()==null) {
+                continue
+            }
+            Path value = output.value as Path;
+            result.put(
+                output.key.getChannelEmitName(),
+                value.toString()
+            );
         }
-        builder.append(";")
-        return builder.toString();
+        return result;
     }
 }
 
